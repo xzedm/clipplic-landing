@@ -1,0 +1,10 @@
+<svg width="350" height="296" viewBox="0 0 350 296" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M134.148 197.946C175 197.946 175 296 215.852 296C262.873 296 251.941 208.859 251.941 161.841C251.941 120.991 350 120.991 350 80.141C350 33.1406 262.873 44.0548 215.852 44.0548C175 44.0548 182.852 0 142 0C94.9799 0 98.0424 33.1406 98.0424 80.141C98.0424 120.991 0 120.991 0 161.841C0 208.859 87.1276 197.946 134.148 197.946Z" fill="url(#paint0_linear_clipplic)"/>
+<defs>
+<linearGradient id="paint0_linear_clipplic" x1="175" y1="-54" x2="175" y2="296" gradientUnits="userSpaceOnUse">
+<stop stop-color="#00F5FF"/>
+<stop offset="0.6" stop-color="#0066FF"/>
+<stop offset="1" stop-color="#050B3B"/>
+</linearGradient>
+</defs>
+</svg>
