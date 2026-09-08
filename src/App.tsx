@@ -1,60 +1,17 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AppleIcon, GithubIcon } from './components/icons';
 import { FloatingHistoryHud } from './components/FloatingHistoryHud';
+import { SpecularButton } from './components/SpecularButton';
+import { BorderGlow } from './components/BorderGlow';
 import {
-  Check,
-  Link2,
-  FileText,
   ShieldCheck,
   Zap,
   Palette,
-  Code2,
   Sparkles
 } from 'lucide-react';
 
-interface MockClip {
-  id: string;
-  type: 'text' | 'link' | 'code' | 'color';
-  content: string;
-  badge?: string;
-  colorHex?: string;
-  timeAgo: string;
-}
-
-const SAMPLE_CLIPS: MockClip[] = [
-  {
-    id: '1',
-    type: 'text',
-    content: 'The fastest way to keep your copied ideas close.',
-    timeAgo: 'Now'
-  },
-  {
-    id: '2',
-    type: 'link',
-    content: 'https://www.apple.com/macos',
-    timeAgo: '2 min'
-  },
-  {
-    id: '3',
-    type: 'code',
-    content: 'git commit -m "feat: native clipboard history"',
-    badge: 'bash',
-    timeAgo: '14 min'
-  },
-  {
-    id: '4',
-    type: 'color',
-    content: '#0071E3',
-    colorHex: '#0071E3',
-    badge: 'Hex Color',
-    timeAgo: 'Yesterday'
-  }
-];
-
 export function App() {
   const [isHudOpen, setIsHudOpen] = useState(false);
-  const [copiedItem, setCopiedItem] = useState<string | null>(null);
-  const [activeClipId, setActiveClipId] = useState<string>('1');
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   // Ensure video autoplays smoothly across all browsers
@@ -94,15 +51,6 @@ export function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const handleCopyCardItem = useCallback((clip: MockClip) => {
-    setActiveClipId(clip.id);
-    if (navigator.clipboard?.writeText) {
-      navigator.clipboard.writeText(clip.content).catch(() => {});
-    }
-    setCopiedItem(clip.content);
-    setTimeout(() => setCopiedItem(null), 2000);
-  }, []);
-
   return (
     <div className="min-h-screen bg-[#F8F9FB] text-slate-900 selection:bg-blue-500/20 selection:text-blue-950 font-sans relative overflow-x-hidden antialiased">
       {/* ============================================================ */}
@@ -138,12 +86,8 @@ export function App() {
             </span>
           </div>
 
-          {/* Right Status Pill */}
+          {/* Right Action */}
           <div className="flex items-center gap-2">
-            <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium text-slate-700 bg-white/80 backdrop-blur-md border border-white/60 shadow-xs select-none">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              macOS 13+ • Apple Silicon & Intel
-            </span>
             <a
               href="https://github.com/xzedm/clipplic"
               target="_blank"
@@ -172,113 +116,59 @@ export function App() {
 
           {/* Primary & Secondary Call to Actions */}
           <div className="flex flex-col items-center animate-fade-up animation-delay-300">
-            <a
+            <SpecularButton
+              size="lg"
+              radius={18}
+              tint="#0071E3"
+              tintOpacity={1}
+              blur={12}
+              textColor="#ffffff"
+              lineColor="#ffffff"
+              baseColor="#0058b3"
+              intensity={1.2}
+              shineSize={12}
+              shineFade={40}
+              thickness={1.2}
+              speed={0.35}
+              followMouse={true}
+              proximity={250}
+              autoAnimate={false}
               href="https://github.com/xzedm/clipplic/releases"
               target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-2xl text-sm font-semibold text-white bg-[#0071E3] hover:bg-[#0077ED] shadow-[0_4px_16px_rgba(0,113,227,0.35)] active:scale-[0.98] transition-all"
+              className="shadow-[0_8px_24px_rgba(0,113,227,0.38)]"
             >
-              <AppleIcon className="w-4 h-4" />
+              <AppleIcon className="w-4 h-4 mr-2" />
               <span>Download for macOS</span>
-            </a>
+            </SpecularButton>
 
             <span className="text-xs text-slate-600 font-medium mt-2.5 select-none">
               Free forever • Open Source • 100% On-Device
             </span>
-          </div>
 
-          {/* Central Interactive Clipplic Window Card */}
-          <div className="w-full max-w-[560px] mt-7 animate-fade-up animation-delay-400">
-            <div className="w-full rounded-2xl bg-white/95 backdrop-blur-xl border border-white/90 shadow-[0_24px_50px_-12px_rgba(0,0,0,0.16),0_2px_4px_rgba(0,0,0,0.04)] ring-1 ring-black/[0.04] p-4 text-left transition-all hover:shadow-[0_28px_60px_-12px_rgba(0,0,0,0.20)]">
-              {/* Window Chrome Header */}
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-2.5">
-                <div className="flex items-center gap-2">
-                  {/* Traffic Light Dots with Realistic Depth */}
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-3 h-3 rounded-full bg-[#FF5F56] border border-[#E0443E] shadow-2xs inline-block" />
-                    <span className="w-3 h-3 rounded-full bg-[#FFBD2E] border border-[#DEA123] shadow-2xs inline-block" />
-                    <span className="w-3 h-3 rounded-full bg-[#27C93F] border border-[#1AAB29] shadow-2xs inline-block" />
-                  </div>
-                  <span className="text-xs font-semibold text-slate-800 ml-1.5 select-none tracking-tight">
-                    Clipplic history
-                  </span>
+            {/* Try HUD Live Call To Action with BorderGlow */}
+            <BorderGlow
+              borderRadius={24}
+              edgeSensitivity={25}
+              glowRadius={32}
+              glowIntensity={1.1}
+              glowColor="210 100 65"
+              backgroundColor="#ffffff"
+              colors={['#0071E3', '#38bdf8', '#60a5fa']}
+              animated={false}
+              className="mt-5 cursor-pointer active:scale-95 transition-all select-none shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_30px_rgba(0,113,227,0.18)]"
+              onClick={() => setIsHudOpen(true)}
+              role="button"
+              tabIndex={0}
+            >
+              <div className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-800">
+                <span className="font-semibold text-slate-900">Try the Floating HUD live</span>
+                <div className="flex items-center gap-1 font-mono text-[11px] text-slate-500">
+                  <kbd className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200/80 shadow-2xs text-[10px] font-semibold">⌘</kbd>
+                  <kbd className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200/80 shadow-2xs text-[10px] font-semibold">⇧</kbd>
+                  <kbd className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200/80 shadow-2xs text-[10px] font-semibold">V</kbd>
                 </div>
-
-                {/* Keyboard Shortcut Keycaps Button */}
-                <button
-                  onClick={() => setIsHudOpen(true)}
-                  className="flex items-center gap-1 text-[11px] font-mono text-slate-500 hover:text-slate-800 px-2 py-1 rounded-lg hover:bg-slate-100/80 active:scale-95 transition-all select-none cursor-pointer"
-                  title="Click to summon search HUD or press ⌘+Shift+V"
-                >
-                  <kbd className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs text-[10px] font-semibold">⌘</kbd>
-                  <kbd className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs text-[10px] font-semibold">⇧</kbd>
-                  <kbd className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs text-[10px] font-semibold">V</kbd>
-                </button>
               </div>
-
-              {/* Interactive Clips List */}
-              <div className="space-y-1">
-                {SAMPLE_CLIPS.map((clip) => {
-                  const isSelected = activeClipId === clip.id;
-                  return (
-                    <div
-                      key={clip.id}
-                      onClick={() => handleCopyCardItem(clip)}
-                      className={`group flex items-center justify-between px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-150 ${
-                        isSelected
-                          ? 'bg-[#EBF5FF] text-slate-900 ring-1 ring-blue-500/20 shadow-2xs'
-                          : 'hover:bg-slate-50 text-slate-700'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2.5 min-w-0 pr-3">
-                        {isSelected ? (
-                          <span className="w-2 h-2 rounded-full bg-[#007AFF] shrink-0 shadow-xs" />
-                        ) : clip.type === 'link' ? (
-                          <Link2 className="w-3.5 h-3.5 text-slate-400 shrink-0 group-hover:text-slate-600" />
-                        ) : clip.type === 'code' ? (
-                          <Code2 className="w-3.5 h-3.5 text-slate-400 shrink-0 group-hover:text-slate-600" />
-                        ) : clip.type === 'color' ? (
-                          <span
-                            className="w-3.5 h-3.5 rounded-md border border-black/10 shrink-0 shadow-2xs"
-                            style={{ backgroundColor: clip.colorHex }}
-                          />
-                        ) : (
-                          <FileText className="w-3.5 h-3.5 text-slate-400 shrink-0 group-hover:text-slate-600" />
-                        )}
-
-                        <span
-                          className={`text-xs truncate font-mono ${
-                            clip.type === 'code' || clip.type === 'color' ? 'font-mono' : 'font-sans'
-                          } ${isSelected ? 'font-medium text-slate-950' : 'text-slate-700'}`}
-                        >
-                          {clip.content}
-                        </span>
-
-                        {clip.badge && (
-                          <span className="hidden sm:inline-flex px-1.5 py-0.5 rounded bg-slate-100 text-slate-500 text-[10px] font-mono shrink-0">
-                            {clip.badge}
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="flex items-center gap-2 shrink-0">
-                        <span className="text-[11px] font-mono text-slate-400 group-hover:text-slate-600">
-                          {clip.timeAgo}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Toast if item clicked */}
-              {copiedItem && (
-                <div className="flex items-center justify-center gap-1.5 text-xs text-emerald-700 bg-emerald-50 border border-emerald-200/80 rounded-xl py-1.5 px-3 mt-2 animate-in fade-in duration-150">
-                  <Check className="w-3.5 h-3.5 stroke-[2.5]" />
-                  <span>Copied to clipboard! Press ⌘V to paste.</span>
-                </div>
-              )}
-            </div>
+            </BorderGlow>
           </div>
         </div>
 
@@ -384,15 +274,30 @@ export function App() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center gap-3">
-            <a
+            <SpecularButton
+              size="lg"
+              radius={18}
+              tint="#0071E3"
+              tintOpacity={1}
+              blur={12}
+              textColor="#ffffff"
+              lineColor="#ffffff"
+              baseColor="#0058b3"
+              intensity={1.2}
+              shineSize={12}
+              shineFade={40}
+              thickness={1.2}
+              speed={0.35}
+              followMouse={true}
+              proximity={250}
+              autoAnimate={false}
               href="https://github.com/xzedm/clipplic/releases"
               target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl text-sm font-semibold text-white bg-[#0071E3] hover:bg-[#0077ED] shadow-[0_4px_16px_rgba(0,113,227,0.3)] active:scale-[0.98] transition-all"
+              className="shadow-[0_8px_24px_rgba(0,113,227,0.32)]"
             >
-              <AppleIcon className="w-4 h-4" />
+              <AppleIcon className="w-4 h-4 mr-2" />
               <span>Download for macOS</span>
-            </a>
+            </SpecularButton>
 
             <a
               href="https://github.com/xzedm/clipplic"
