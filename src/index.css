@@ -1,7 +1,29 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Tanker';
+  src: url('/Fonts/WEB/fonts/Tanker-Regular.woff2') format('woff2'),
+       url('/Fonts/WEB/fonts/Tanker-Regular.woff') format('woff'),
+       url('/Fonts/WEB/fonts/Tanker-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-display: 'Tanker', -apple-system, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", -apple-system, system-ui, sans-serif;
+  --font-mono: "SF Mono", Menlo, Monaco, "Cascadia Code", monospace;
+}
+
+.font-display {
+  font-family: 'Tanker', -apple-system, sans-serif;
+  letter-spacing: 0.02em;
+}
+
 @layer base {
   :root {
+    --font-display: 'Tanker', -apple-system, sans-serif;
     --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", -apple-system, system-ui, sans-serif;
     --font-mono: "SF Mono", Menlo, Monaco, "Cascadia Code", monospace;
   }
