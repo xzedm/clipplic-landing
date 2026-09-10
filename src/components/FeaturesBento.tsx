@@ -1,6 +1,7 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+/*
 import {
   Zap,
   ShieldCheck,
@@ -13,6 +14,7 @@ import {
   Cpu,
   Lock
 } from 'lucide-react';
+*/
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -23,10 +25,12 @@ export const FeaturesBento: React.FC = () => {
   const headerRef = useRef<HTMLDivElement | null>(null);
   const cardsRef = useRef<HTMLDivElement | null>(null);
 
+  /*
   // Interactive search state for Instant Recall card
   const [searchQuery, setSearchQuery] = useState('restoreAndPaste');
   const [activeFormatTab, setActiveFormatTab] = useState<'colors' | 'code' | 'links' | 'text'>('colors');
   const [copiedColor, setCopiedColor] = useState(false);
+  */
 
   useEffect(() => {
     // Respect reduced motion
@@ -88,6 +92,7 @@ export const FeaturesBento: React.FC = () => {
     };
   }, []);
 
+  /*
   const handleCopyHex = (hex: string) => {
     if (navigator.clipboard?.writeText) {
       navigator.clipboard.writeText(hex).catch(() => {});
@@ -95,6 +100,7 @@ export const FeaturesBento: React.FC = () => {
     setCopiedColor(true);
     setTimeout(() => setCopiedColor(false), 2000);
   };
+  */
 
   return (
     <section
@@ -120,17 +126,17 @@ export const FeaturesBento: React.FC = () => {
         </p>
       </div>
 
-      {/* Gapless Bento Grid (12 Columns, mathematically dense) */}
+      {/* Gapless Bento Grid (12 Columns, mathematically dense)
       <div
         ref={cardsRef}
         className="w-full grid grid-cols-12 grid-flow-dense gap-6"
       >
-        {/* ============================================================ */}
-        {/* CARD 1: INSTANT RECALL (7 COLS)                              */}
-        {/* ============================================================ */}
+        {/* ============================================================ * /}
+        {/* CARD 1: INSTANT RECALL (7 COLS)                              * /}
+        {/* ============================================================ * /}
         <div className="col-span-12 lg:col-span-7 rounded-3xl bg-white dark:bg-[#16181F] border border-slate-200/80 dark:border-white/10 p-6 sm:p-8 md:p-10 relative overflow-hidden group hover:border-[#0071E3]/40 transition-all duration-500 shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.25)] flex flex-col justify-between">
           <div>
-            {/* Card Header & Metrics */}
+            {/* Card Header & Metrics * /}
             <div className="flex items-center justify-between gap-4 mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-11 h-11 rounded-2xl bg-blue-50 dark:bg-blue-950/60 border border-blue-100 dark:border-blue-900/40 text-[#0071E3] dark:text-blue-400 flex items-center justify-center shadow-xs">
@@ -146,14 +152,14 @@ export const FeaturesBento: React.FC = () => {
                 </div>
               </div>
 
-              {/* Latency Live Pill */}
+              {/* Latency Live Pill * /}
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200/80 dark:border-emerald-800/50 text-emerald-700 dark:text-emerald-400 text-xs font-mono font-semibold shadow-2xs">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span>Latency ~12ms</span>
               </div>
             </div>
 
-            {/* Typography */}
+            {/* Typography * /}
             <h3 className="font-display text-3xl sm:text-4xl text-slate-950 dark:text-white tracking-wide uppercase mb-3">
               Instant Recall
             </h3>
@@ -162,7 +168,7 @@ export const FeaturesBento: React.FC = () => {
             </p>
           </div>
 
-          {/* Interactive Search Visualizer */}
+          {/* Interactive Search Visualizer * /}
           <div className="rounded-2xl bg-slate-50 dark:bg-[#111216] border border-slate-200/80 dark:border-white/10 p-4 shadow-inner">
             <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white dark:bg-[#1A1C24] border border-slate-200/80 dark:border-white/10 mb-3 shadow-xs">
               <Search className="w-4 h-4 text-[#0071E3]" />
@@ -178,7 +184,7 @@ export const FeaturesBento: React.FC = () => {
               </span>
             </div>
 
-            {/* Micro Match Results */}
+            {/* Micro Match Results * /}
             <div className="space-y-1.5 font-mono text-xs">
               <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-blue-50/70 dark:bg-blue-950/40 border border-blue-200/60 dark:border-blue-800/40 text-slate-800 dark:text-slate-200">
                 <div className="flex items-center gap-2 truncate">
@@ -200,12 +206,12 @@ export const FeaturesBento: React.FC = () => {
           </div>
         </div>
 
-        {/* ============================================================ */}
-        {/* CARD 2: 100% ON-DEVICE (5 COLS)                              */}
-        {/* ============================================================ */}
+        {/* ============================================================ * /}
+        {/* CARD 2: 100% ON-DEVICE (5 COLS)                              * /}
+        {/* ============================================================ * /}
         <div className="col-span-12 lg:col-span-5 rounded-3xl bg-white dark:bg-[#16181F] border border-slate-200/80 dark:border-white/10 p-6 sm:p-8 md:p-10 relative overflow-hidden group hover:border-emerald-500/40 transition-all duration-500 shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.25)] flex flex-col justify-between">
           <div>
-            {/* Card Header & Metrics */}
+            {/* Card Header & Metrics * /}
             <div className="flex items-center justify-between gap-4 mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-11 h-11 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-100 dark:border-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shadow-xs">
@@ -221,13 +227,13 @@ export const FeaturesBento: React.FC = () => {
                 </div>
               </div>
 
-              {/* Zero Requests Badge */}
+              {/* Zero Requests Badge * /}
               <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-white/10 text-slate-800 dark:text-slate-200 text-xs font-mono font-semibold shadow-2xs">
                 <span>0 Requests</span>
               </div>
             </div>
 
-            {/* Typography */}
+            {/* Typography * /}
             <h3 className="font-display text-3xl sm:text-4xl text-slate-950 dark:text-white tracking-wide uppercase mb-3">
               100% On-Device
             </h3>
@@ -236,7 +242,7 @@ export const FeaturesBento: React.FC = () => {
             </p>
           </div>
 
-          {/* Secure Enclave / SQLite Architecture Card */}
+          {/* Secure Enclave / SQLite Architecture Card * /}
           <div className="rounded-2xl bg-slate-50 dark:bg-[#111216] border border-slate-200/80 dark:border-white/10 p-4 space-y-3 font-mono text-xs">
             <div className="flex items-center justify-between pb-2 border-b border-slate-200/70 dark:border-white/10 text-[11px]">
               <span className="flex items-center gap-1.5 text-slate-500">
@@ -266,12 +272,12 @@ export const FeaturesBento: React.FC = () => {
           </div>
         </div>
 
-        {/* ============================================================ */}
-        {/* CARD 3: CONTENT-AWARE INTELLIGENCE (12 COLS PANORAMIC)       */}
-        {/* ============================================================ */}
+        {/* ============================================================ * /}
+        {/* CARD 3: CONTENT-AWARE INTELLIGENCE (12 COLS PANORAMIC)       * /}
+        {/* ============================================================ * /}
         <div className="col-span-12 rounded-3xl bg-white dark:bg-[#16181F] border border-slate-200/80 dark:border-white/10 p-6 sm:p-8 md:p-12 relative overflow-hidden group hover:border-purple-500/40 transition-all duration-500 shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.25)]">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            {/* Left Detail Description */}
+            {/* Left Detail Description * /}
             <div className="lg:col-span-5 flex flex-col justify-center">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-11 h-11 rounded-2xl bg-purple-50 dark:bg-purple-950/60 border border-purple-100 dark:border-purple-900/40 text-purple-600 dark:text-purple-400 flex items-center justify-center shadow-xs">
@@ -294,7 +300,7 @@ export const FeaturesBento: React.FC = () => {
                 Automatically formats hex colors with live visual swatches, syntax-highlights code snippets, and lets you open web links with a single keystroke.
               </p>
 
-              {/* Format selection chips */}
+              {/* Format selection chips * /}
               <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
                 {(['colors', 'code', 'links', 'text'] as const).map((tab) => (
                   <button
@@ -312,7 +318,7 @@ export const FeaturesBento: React.FC = () => {
               </div>
             </div>
 
-            {/* Right Interactive Live Stage */}
+            {/* Right Interactive Live Stage * /}
             <div className="lg:col-span-7">
               {activeFormatTab === 'colors' && (
                 <div className="rounded-2xl bg-slate-50 dark:bg-[#111216] border border-slate-200/80 dark:border-white/10 p-6 space-y-4 animate-fade-in">
@@ -347,7 +353,7 @@ export const FeaturesBento: React.FC = () => {
                     </button>
                   </div>
 
-                  {/* Gradient swatch spectrum preview */}
+                  {/* Gradient swatch spectrum preview * /}
                   <div className="h-4 rounded-lg bg-linear-to-r from-blue-700 via-[#0071E3] to-sky-400 border border-white/20" />
                 </div>
               )}
@@ -420,6 +426,7 @@ export const FeaturesBento: React.FC = () => {
           </div>
         </div>
       </div>
+      */}
     </section>
   );
 };

@@ -120,7 +120,7 @@ export function App() {
           </h1>
 
           {/* Subtitle with careful measure and high legibility */}
-          <p className="text-slate-700 dark:text-slate-300 text-sm sm:text-base md:text-lg font-normal leading-relaxed max-w-[500px] text-center mb-6 animate-fade-up animation-delay-200 text-pretty">
+          <p className="text-slate-950 text-sm sm:text-base md:text-lg font-medium leading-relaxed max-w-[540px] text-center mb-6 animate-fade-up animation-delay-200 text-pretty">
             A calm, private clipboard history for macOS. Everything you copy is right where you left it — ready when you need it.
           </p>
 
@@ -152,7 +152,7 @@ export function App() {
               <span>Download for macOS</span>
             </SpecularButton>
 
-            <span className="text-xs text-slate-600 dark:text-slate-400 font-medium mt-2.5 select-none">
+            <span className="text-xs text-slate-800 font-medium mt-2.5 select-none">
               Free forever • Open Source • 100% On-Device
             </span>
 
