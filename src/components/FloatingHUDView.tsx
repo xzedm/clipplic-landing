@@ -205,12 +205,14 @@ export interface FloatingHUDViewProps {
   isEmbedded?: boolean;
   onClose?: () => void;
   className?: string;
+  autoFocusSearch?: boolean;
 }
 
 export const FloatingHUDView: React.FC<FloatingHUDViewProps> = ({
   isEmbedded = false,
   onClose,
-  className = ''
+  className = '',
+  autoFocusSearch = false
 }) => {
   const [items, setItems] = useState<HUDItem[]>(DEFAULT_HUD_ITEMS);
   const [selectedId, setSelectedId] = useState<string>('1');
@@ -221,6 +223,16 @@ export const FloatingHUDView: React.FC<FloatingHUDViewProps> = ({
   const [isQuickLookOpen, setIsQuickLookOpen] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Auto-focus search field on mount when modal opens
+  useEffect(() => {
+    if (autoFocusSearch && searchInputRef.current) {
+      const timer = setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [autoFocusSearch]);
 
   // Filter items based on selected tab and search text
   const filteredItems = useMemo(() => {
@@ -377,7 +389,8 @@ export const FloatingHUDView: React.FC<FloatingHUDViewProps> = ({
           {searchText && (
             <button
               onClick={() => setSearchText('')}
-              className="text-slate-400 hover:text-slate-600 p-0.5 rounded-full"
+              aria-label="Clear search query"
+              className="text-slate-400 hover:text-slate-600 p-1.5 rounded-full min-w-[28px] min-h-[28px] flex items-center justify-center"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -387,11 +400,12 @@ export const FloatingHUDView: React.FC<FloatingHUDViewProps> = ({
         {/* Quick Settings Icon Button */}
         <button
           title="Open Settings (⌘,)"
+          aria-label="Open Settings"
           onClick={() => {
             setToastMessage('Settings (⌘,)');
             setTimeout(() => setToastMessage(null), 1500);
           }}
-          className="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-100/90 hover:bg-slate-200/70 border border-slate-200/60 text-slate-600 transition-colors"
+          className="w-9 h-9 sm:w-7 sm:h-7 min-w-[36px] min-h-[36px] sm:min-w-0 sm:min-h-0 flex items-center justify-center rounded-lg bg-slate-100/90 hover:bg-slate-200/70 border border-slate-200/60 text-slate-600 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#0071E3]"
         >
           <Settings className="w-3.5 h-3.5" />
         </button>
@@ -399,6 +413,7 @@ export const FloatingHUDView: React.FC<FloatingHUDViewProps> = ({
         {/* Close Icon Button */}
         <button
           title="Close (Esc)"
+          aria-label="Close clipboard history"
           onClick={() => {
             if (onClose) onClose();
             else {
@@ -406,7 +421,7 @@ export const FloatingHUDView: React.FC<FloatingHUDViewProps> = ({
               setTimeout(() => setToastMessage(null), 1500);
             }
           }}
-          className="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-100/90 hover:bg-slate-200/70 border border-slate-200/60 text-slate-600 transition-colors"
+          className="w-9 h-9 sm:w-7 sm:h-7 min-w-[36px] min-h-[36px] sm:min-w-0 sm:min-h-0 flex items-center justify-center rounded-lg bg-slate-100/90 hover:bg-slate-200/70 border border-slate-200/60 text-slate-600 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#0071E3]"
         >
           <X className="w-3.5 h-3.5" />
         </button>
@@ -420,7 +435,7 @@ export const FloatingHUDView: React.FC<FloatingHUDViewProps> = ({
           {/* All */}
           <button
             onClick={() => setActiveFilter(null)}
-            className={`px-2.5 py-1 rounded-full flex items-center gap-1 transition-all ${
+            className={`px-3 py-1.5 sm:py-1 min-h-[32px] sm:min-h-0 rounded-full flex items-center gap-1 transition-all ${
               activeFilter === null
                 ? 'bg-[#0071E3]/15 text-[#0071E3] font-semibold border border-[#0071E3]/30'
                 : 'bg-slate-100/90 text-slate-600 hover:bg-slate-200/80 border border-transparent'
@@ -433,7 +448,7 @@ export const FloatingHUDView: React.FC<FloatingHUDViewProps> = ({
           {/* Images */}
           <button
             onClick={() => setActiveFilter(activeFilter === 'image' ? null : 'image')}
-            className={`px-2.5 py-1 rounded-full flex items-center gap-1 transition-all ${
+            className={`px-3 py-1.5 sm:py-1 min-h-[32px] sm:min-h-0 rounded-full flex items-center gap-1 transition-all ${
               activeFilter === 'image'
                 ? 'bg-[#0071E3]/15 text-[#0071E3] font-semibold border border-[#0071E3]/30'
                 : 'bg-slate-100/90 text-slate-600 hover:bg-slate-200/80 border border-transparent'
@@ -447,7 +462,7 @@ export const FloatingHUDView: React.FC<FloatingHUDViewProps> = ({
           {/* Files */}
           <button
             onClick={() => setActiveFilter(activeFilter === 'file' ? null : 'file')}
-            className={`px-2.5 py-1 rounded-full flex items-center gap-1 transition-all ${
+            className={`px-3 py-1.5 sm:py-1 min-h-[32px] sm:min-h-0 rounded-full flex items-center gap-1 transition-all ${
               activeFilter === 'file'
                 ? 'bg-[#0071E3]/15 text-[#0071E3] font-semibold border border-[#0071E3]/30'
                 : 'bg-slate-100/90 text-slate-600 hover:bg-slate-200/80 border border-transparent'
@@ -461,7 +476,7 @@ export const FloatingHUDView: React.FC<FloatingHUDViewProps> = ({
           {/* Text */}
           <button
             onClick={() => setActiveFilter(activeFilter === 'text' ? null : 'text')}
-            className={`px-2.5 py-1 rounded-full flex items-center gap-1 transition-all ${
+            className={`px-3 py-1.5 sm:py-1 min-h-[32px] sm:min-h-0 rounded-full flex items-center gap-1 transition-all ${
               activeFilter === 'text'
                 ? 'bg-[#0071E3]/15 text-[#0071E3] font-semibold border border-[#0071E3]/30'
                 : 'bg-slate-100/90 text-slate-600 hover:bg-slate-200/80 border border-transparent'
@@ -474,7 +489,7 @@ export const FloatingHUDView: React.FC<FloatingHUDViewProps> = ({
           {/* Links */}
           <button
             onClick={() => setActiveFilter(activeFilter === 'url' ? null : 'url')}
-            className={`px-2.5 py-1 rounded-full flex items-center gap-1 transition-all ${
+            className={`px-3 py-1.5 sm:py-1 min-h-[32px] sm:min-h-0 rounded-full flex items-center gap-1 transition-all ${
               activeFilter === 'url'
                 ? 'bg-[#0071E3]/15 text-[#0071E3] font-semibold border border-[#0071E3]/30'
                 : 'bg-slate-100/90 text-slate-600 hover:bg-slate-200/80 border border-transparent'
@@ -487,7 +502,7 @@ export const FloatingHUDView: React.FC<FloatingHUDViewProps> = ({
           {/* Code */}
           <button
             onClick={() => setActiveFilter(activeFilter === 'code' ? null : 'code')}
-            className={`px-2.5 py-1 rounded-full flex items-center gap-1 transition-all ${
+            className={`px-3 py-1.5 sm:py-1 min-h-[32px] sm:min-h-0 rounded-full flex items-center gap-1 transition-all ${
               activeFilter === 'code'
                 ? 'bg-[#0071E3]/15 text-[#0071E3] font-semibold border border-[#0071E3]/30'
                 : 'bg-slate-100/90 text-slate-600 hover:bg-slate-200/80 border border-transparent'

@@ -96,9 +96,11 @@ export interface BorderGlowProps {
   colors?: string[];
   fillOpacity?: number;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
+  onKeyDown?: React.KeyboardEventHandler<HTMLDivElement>;
   role?: string;
   tabIndex?: number;
   style?: CSSProperties;
+  'aria-label'?: string;
 }
 
 export const BorderGlow: React.FC<BorderGlowProps> = ({
@@ -115,9 +117,11 @@ export const BorderGlow: React.FC<BorderGlowProps> = ({
   colors = ['#c084fc', '#f472b6', '#38bdf8'],
   fillOpacity = 0.5,
   onClick,
+  onKeyDown,
   role,
   tabIndex,
-  style = {}
+  style = {},
+  'aria-label': ariaLabel
 }) => {
   const cardRef = useRef<HTMLDivElement | null>(null);
 
@@ -187,13 +191,28 @@ export const BorderGlow: React.FC<BorderGlowProps> = ({
   const glowVars = buildGlowVars(glowColor, glowIntensity);
   const lightSurface = isLightColor(backgroundColor);
 
+  const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
+    if (onKeyDown) {
+      onKeyDown(e);
+      return;
+    }
+    if (role === 'button' || onClick) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick?.(e as unknown as React.MouseEvent<HTMLDivElement>);
+      }
+    }
+  };
+
   return (
     <div
       ref={cardRef}
       onPointerMove={handlePointerMove}
       onClick={onClick}
+      onKeyDown={handleKeyDown}
       role={role}
       tabIndex={tabIndex}
+      aria-label={ariaLabel}
       className={`border-glow-card${lightSurface ? ' border-glow-card--light' : ''} ${className}`}
       style={{
         '--card-bg': backgroundColor,

@@ -85,12 +85,14 @@ export interface SpecularButtonProps {
   proximity?: number;
   autoAnimate?: boolean;
   disabled?: boolean;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
+  onClick?: MouseEventHandler<HTMLElement>;
   href?: string;
   target?: string;
+  rel?: string;
   className?: string;
   type?: 'button' | 'submit' | 'reset';
   style?: CSSProperties;
+  'aria-label'?: string;
 }
 
 export const SpecularButton: React.FC<SpecularButtonProps> = ({
@@ -115,11 +117,13 @@ export const SpecularButton: React.FC<SpecularButtonProps> = ({
   onClick,
   href,
   target,
+  rel,
   className = '',
   type = 'button',
-  style = {}
+  style = {},
+  'aria-label': ariaLabel
 }) => {
-  const btnRef = useRef<HTMLButtonElement | null>(null);
+  const elementRef = useRef<HTMLElement | null>(null);
   const fxRef = useRef<HTMLSpanElement | null>(null);
   const propsRef = useRef({
     radius,
@@ -150,9 +154,12 @@ export const SpecularButton: React.FC<SpecularButtonProps> = ({
   };
 
   useEffect(() => {
-    const btn = btnRef.current;
+    const elem = elementRef.current;
     const fx = fxRef.current;
-    if (!btn || !fx) return;
+    if (!elem || !fx) return;
+
+    // Check prefers-reduced-motion
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const dpr = window.devicePixelRatio || 1;
     const renderer = new Renderer({ alpha: true, premultipliedAlpha: true, antialias: true, dpr });
@@ -189,74 +196,9 @@ export const SpecularButton: React.FC<SpecularButtonProps> = ({
     fx.appendChild(gl.canvas);
 
     const sizeRef = { w: 1, h: 1 };
-    const resize = () => {
-      if (!btn) return;
-      // Fractional size + explicit center keep the SDF pinned to the exact
-      // CSS border, instead of drifting up to a pixel from offsetWidth rounding.
-      const rect = btn.getBoundingClientRect();
-      const w = rect.width;
-      const h = rect.height;
-      sizeRef.w = w;
-      sizeRef.h = h;
-      renderer.setSize(w + PAD * 2, h + PAD * 2);
-      program.uniforms.uCenter.value = [(PAD + w / 2) * dpr, (PAD + h / 2) * dpr];
-      program.uniforms.uHalfSize.value = [(w / 2) * dpr, (h / 2) * dpr];
-    };
-    const ro = new ResizeObserver(resize);
-    ro.observe(btn);
-    resize();
 
-    // Light angle steers toward the pointer (anywhere on the page) and falls
-    // back to a slow sweep when the pointer hasn't moved yet.
-    let pointerAngle: number | null = null;
-    let proximityT = 0;
-    const onPointerMove = (e: PointerEvent) => {
-      if (!btn) return;
-      const rect = btn.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const dx = Math.max(rect.left - e.clientX, 0, e.clientX - rect.right);
-      const dy = Math.max(rect.top - e.clientY, 0, e.clientY - rect.bottom);
-      const dist = Math.hypot(dx, dy);
-      // Over the button itself the light settles on the diagonal (framing the
-      // corners) and gently sways with the cursor position within the button.
-      if (dist === 0) {
-        const nx = (e.clientX - cx) / (rect.width / 2);
-        const ny = (cy - e.clientY) / (rect.height / 2);
-        pointerAngle = Math.atan2(2 / rect.height, -2 / rect.width) + nx * 0.3 + ny * 0.15;
-      } else {
-        pointerAngle = Math.atan2(cy - e.clientY, e.clientX - cx);
-      }
-      const t = Math.max(0, 1 - dist / Math.max(propsRef.current.proximity, 1));
-      proximityT = t * t * (3 - 2 * t);
-    };
-    window.addEventListener('pointermove', onPointerMove);
-
-    let angle = 2.4;
-    let idleAngle = 2.4;
-    let bright = 0;
-    let last = performance.now();
-    let raf = 0;
-
-    const lineC = new Color();
-    const baseC = new Color();
-
-    const update = (now: number) => {
-      raf = requestAnimationFrame(update);
-      const dt = Math.min((now - last) / 1000, 0.05);
-      last = now;
+    const renderFrame = () => {
       const p = propsRef.current;
-
-      idleAngle += p.speed * dt;
-      const steer = p.followMouse && pointerAngle != null && (!p.autoAnimate || proximityT > 0);
-      const target = steer && pointerAngle !== null ? pointerAngle : idleAngle;
-      const diff = ((target - angle + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
-      angle += diff * (1 - Math.exp(-dt * 7));
-
-      // Shine fades in with pointer proximity unless autoAnimate keeps it on
-      const brightTarget = p.autoAnimate ? 1 : proximityT;
-      bright += (brightTarget - bright) * (1 - Math.exp(-dt * 8));
-
       lineC.set(p.lineColor);
       baseC.set(p.baseColor);
       program.uniforms.uAngle.value = angle;
@@ -269,47 +211,191 @@ export const SpecularButton: React.FC<SpecularButtonProps> = ({
       program.uniforms.uThickness.value = p.thickness * dpr;
       renderer.render({ scene: mesh });
     };
-    raf = requestAnimationFrame(update);
+
+    const resize = () => {
+      if (!elem) return;
+      const rect = elem.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+      sizeRef.w = w;
+      sizeRef.h = h;
+      renderer.setSize(w + PAD * 2, h + PAD * 2);
+      program.uniforms.uCenter.value = [(PAD + w / 2) * dpr, (PAD + h / 2) * dpr];
+      program.uniforms.uHalfSize.value = [(w / 2) * dpr, (h / 2) * dpr];
+      renderFrame();
+    };
+    const ro = new ResizeObserver(resize);
+    ro.observe(elem);
+
+    let isVisible = true;
+    let pointerAngle: number | null = null;
+    let proximityT = 0;
+    let angle = 2.4;
+    let idleAngle = 2.4;
+    let bright = 0;
+    let last = performance.now();
+    let raf = 0;
+    let isRunning = false;
+
+    const lineC = new Color();
+    const baseC = new Color();
+
+    const startLoop = () => {
+      if (prefersReducedMotion || !isVisible || isRunning) return;
+      isRunning = true;
+      last = performance.now();
+      raf = requestAnimationFrame(update);
+    };
+
+    const stopLoop = () => {
+      if (raf) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      }
+      isRunning = false;
+    };
+
+    const update = (now: number) => {
+      if (!isVisible) {
+        stopLoop();
+        return;
+      }
+
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      const p = propsRef.current;
+
+      idleAngle += p.speed * dt;
+      const steer = p.followMouse && pointerAngle != null && (!p.autoAnimate || proximityT > 0);
+      const target = steer && pointerAngle !== null ? pointerAngle : idleAngle;
+      const diff = ((target - angle + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
+      angle += diff * (1 - Math.exp(-dt * 7));
+
+      const brightTarget = p.autoAnimate ? 1 : proximityT;
+      bright += (brightTarget - bright) * (1 - Math.exp(-dt * 8));
+
+      renderFrame();
+
+      // Idle throttling: stop continuous RAF when bright settles to 0 and pointer is far
+      if (!p.autoAnimate && proximityT === 0 && bright < 0.005) {
+        bright = 0;
+        renderFrame();
+        stopLoop();
+        return;
+      }
+
+      raf = requestAnimationFrame(update);
+    };
+
+    const onPointerMove = (e: PointerEvent) => {
+      if (!elem || !isVisible) return;
+      const rect = elem.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = Math.max(rect.left - e.clientX, 0, e.clientX - rect.right);
+      const dy = Math.max(rect.top - e.clientY, 0, e.clientY - rect.bottom);
+      const dist = Math.hypot(dx, dy);
+
+      if (dist === 0) {
+        const nx = (e.clientX - cx) / (rect.width / 2);
+        const ny = (cy - e.clientY) / (rect.height / 2);
+        pointerAngle = Math.atan2(2 / rect.height, -2 / rect.width) + nx * 0.3 + ny * 0.15;
+      } else {
+        pointerAngle = Math.atan2(cy - e.clientY, e.clientX - cx);
+      }
+      const t = Math.max(0, 1 - dist / Math.max(propsRef.current.proximity, 1));
+      proximityT = t * t * (3 - 2 * t);
+
+      if (proximityT > 0 || propsRef.current.autoAnimate) {
+        startLoop();
+      }
+    };
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
+
+    // IntersectionObserver to pause RAF when button is off-screen
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          isVisible = entry.isIntersecting;
+          if (isVisible) {
+            if (propsRef.current.autoAnimate || proximityT > 0) {
+              startLoop();
+            } else {
+              renderFrame();
+            }
+          } else {
+            stopLoop();
+          }
+        }
+      },
+      { threshold: 0 }
+    );
+    io.observe(elem);
+
+    resize();
+    if (propsRef.current.autoAnimate && !prefersReducedMotion) {
+      startLoop();
+    } else {
+      renderFrame();
+    }
 
     return () => {
-      cancelAnimationFrame(raf);
+      stopLoop();
       ro.disconnect();
+      io.disconnect();
       window.removeEventListener('pointermove', onPointerMove);
       if (gl.canvas.parentNode === fx) fx.removeChild(gl.canvas);
       gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
   }, []);
 
-  const handleClick: MouseEventHandler<HTMLButtonElement> = (e) => {
-    if (onClick) {
-      onClick(e);
-    } else if (href) {
-      if (target === '_blank') {
-        window.open(href, '_blank', 'noopener,noreferrer');
-      } else {
-        window.location.href = href;
-      }
-    }
+  const commonProps = {
+    className: `specular-button specular-button--${size} focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#0071E3] focus-visible:ring-offset-2${
+      className ? ` ${className}` : ''
+    }`,
+    style: {
+      '--sb-radius': `${radius}px`,
+      '--sb-tint': tint,
+      '--sb-tint-opacity': tintOpacity,
+      '--sb-blur': `${blur}px`,
+      '--sb-text-color': textColor,
+      ...style
+    } as CSSProperties,
+    'aria-label': ariaLabel
   };
+
+  const innerContent = (
+    <>
+      <span ref={fxRef} className="specular-button__fx" aria-hidden="true" />
+      <span className="specular-button__label">{children}</span>
+    </>
+  );
+
+  if (href) {
+    const resolvedRel = target === '_blank' ? 'noopener noreferrer' : rel;
+    return (
+      <a
+        ref={elementRef as React.RefObject<HTMLAnchorElement>}
+        href={href}
+        target={target}
+        rel={resolvedRel}
+        onClick={onClick as MouseEventHandler<HTMLAnchorElement>}
+        {...commonProps}
+      >
+        {innerContent}
+      </a>
+    );
+  }
 
   return (
     <button
-      ref={btnRef}
+      ref={elementRef as React.RefObject<HTMLButtonElement>}
       type={type}
       disabled={disabled}
-      onClick={handleClick}
-      className={`specular-button specular-button--${size}${className ? ` ${className}` : ''}`}
-      style={{
-        '--sb-radius': `${radius}px`,
-        '--sb-tint': tint,
-        '--sb-tint-opacity': tintOpacity,
-        '--sb-blur': `${blur}px`,
-        '--sb-text-color': textColor,
-        ...style
-      } as CSSProperties}
+      onClick={onClick as MouseEventHandler<HTMLButtonElement>}
+      {...commonProps}
     >
-      <span ref={fxRef} className="specular-button__fx" aria-hidden="true" />
-      <span className="specular-button__label">{children}</span>
+      {innerContent}
     </button>
   );
 };
