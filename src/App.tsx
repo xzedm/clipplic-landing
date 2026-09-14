@@ -2,13 +2,12 @@ import { useState, useEffect, useRef } from 'react';
 import { AppleIcon, GithubIcon } from './components/icons';
 import { FloatingHistoryHud } from './components/FloatingHistoryHud';
 import { SpecularButton } from './components/SpecularButton';
-import { BorderGlow } from './components/BorderGlow';
-import { FeaturesBento } from './components/FeaturesBento';
+import { HudLiveCard } from './components/HudLiveCard';
 
 export function App() {
   const [isHudOpen, setIsHudOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const hudTriggerRef = useRef<HTMLDivElement | null>(null);
+  const hudTriggerRef = useRef<HTMLButtonElement | null>(null);
 
   // Ensure video autoplays smoothly across all browsers
   useEffect(() => {
@@ -20,7 +19,7 @@ export function App() {
       if (playPromise !== undefined) {
         playPromise.catch(() => {
           const tryPlay = () => {
-            video.play().catch(() => {});
+            video.play().catch(() => { });
           };
           window.addEventListener('click', tryPlay, { once: true });
           window.addEventListener('keydown', tryPlay, { once: true });
@@ -45,7 +44,7 @@ export function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F8F9FB] dark:bg-[#0D0E12] text-slate-900 dark:text-slate-100 selection:bg-blue-500/20 selection:text-blue-950 font-sans relative overflow-x-hidden antialiased">
+    <div className="min-h-screen bg-[#F8F9FB] text-slate-900 selection:bg-blue-500/20 selection:text-blue-950 font-sans relative overflow-x-hidden antialiased">
       {/* ============================================================ */}
       {/* SECTION 1: HERO VIEWPORT (EXACTLY FULL SCREEN)               */}
       {/* ============================================================ */}
@@ -64,6 +63,8 @@ export function App() {
           >
             <source src="/bg-clipplic.mp4" type="video/mp4" />
           </video>
+          {/* Subtle bottom gradient to blend the meadow horizon into #F8F9FB */}
+          <div className="absolute bottom-0 inset-x-0 h-32 sm:h-40 bg-gradient-to-t from-[#F8F9FB] via-[#F8F9FB]/60 to-transparent pointer-events-none" />
         </div>
 
         {/* Top Floating Navigation Bar */}
@@ -77,7 +78,7 @@ export function App() {
               width={36}
               height={36}
             />
-            <span className="font-display text-xl sm:text-2xl text-slate-950 dark:text-white tracking-wider">
+            <span className="font-display text-xl sm:text-2xl text-slate-950 tracking-wider">
               CLIPPLIC
             </span>
           </div>
@@ -89,9 +90,9 @@ export function App() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Star Clipplic on GitHub, 1,200 stars"
-              className="inline-flex items-center gap-1.5 px-3.5 sm:px-3 py-2 sm:py-1.5 min-h-[44px] sm:min-h-0 rounded-xl text-xs font-medium text-slate-800 dark:text-slate-200 bg-white/85 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/80 dark:border-white/10 shadow-xs hover:bg-white dark:hover:bg-slate-900 active:scale-[0.98] transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#0071E3]"
+              className="inline-flex items-center gap-1.5 px-3.5 sm:px-3 py-2 sm:py-1.5 min-h-[44px] sm:min-h-0 rounded-xl text-xs font-medium text-slate-800 bg-white/85 backdrop-blur-md border border-slate-200/80 shadow-xs hover:bg-white active:scale-[0.98] transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#0071E3]"
             >
-              <GithubIcon className="w-3.5 h-3.5 text-slate-800 dark:text-slate-200" />
+              <GithubIcon className="w-3.5 h-3.5 text-slate-800" />
               <span className="font-mono text-[11px]">GitHub</span>
               <span className="sr-only">1.2 thousand stars</span>
             </a>
@@ -108,7 +109,7 @@ export function App() {
               <br />
               Remember more.
             </span>
-            {/* Luminous white lift layer: keeps it bright and whitish without being totally flat white */}
+            {/* Luminous white lift layer */}
             <span
               aria-hidden="true"
               className="block absolute inset-0 text-white/55 pointer-events-none drop-shadow-[0_2px_16px_rgba(0,0,0,0.18)]"
@@ -156,32 +157,12 @@ export function App() {
               Free forever • Open Source • 100% On-Device
             </span>
 
-            {/* Try HUD Live Call To Action with BorderGlow */}
-            <div ref={hudTriggerRef} className="mt-5">
-              <BorderGlow
-                borderRadius={24}
-                edgeSensitivity={25}
-                glowRadius={32}
-                glowIntensity={1.1}
-                glowColor="210 100 65"
-                backgroundColor="#ffffff"
-                colors={['#0071E3', '#38bdf8', '#60a5fa']}
-                animated={false}
-                className="cursor-pointer active:scale-95 transition-all select-none shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_30px_rgba(0,113,227,0.18)]"
+            {/* Spotlight HUD Live Trigger */}
+            <div className="mt-4 w-full flex justify-center">
+              <HudLiveCard
+                ref={hudTriggerRef}
                 onClick={() => setIsHudOpen(true)}
-                role="button"
-                tabIndex={0}
-                aria-label="Try the Floating HUD live, keyboard shortcut Command Shift V"
-              >
-                <div className="flex items-center gap-2.5 px-4 py-2.5 sm:py-2 text-xs font-medium text-slate-800">
-                  <span className="font-semibold text-slate-900">Try the Floating HUD live</span>
-                  <div className="flex items-center gap-1 font-mono text-[11px] text-slate-500">
-                    <kbd className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200/80 shadow-2xs text-[10px] font-semibold">⌘</kbd>
-                    <kbd className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200/80 shadow-2xs text-[10px] font-semibold">⇧</kbd>
-                    <kbd className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200/80 shadow-2xs text-[10px] font-semibold">V</kbd>
-                  </div>
-                </div>
-              </BorderGlow>
+              />
             </div>
           </div>
         </div>
@@ -195,67 +176,102 @@ export function App() {
         </div>
       </section>
 
-      {/* SECTION 2: GSAP-POWERED GAPLESS BENTO FEATURES */}
-      <FeaturesBento />
+      {/* ============================================================ */}
+      {/* SECTION 2: PRODUCT DEMO (GIF)                                */}
+      {/* ============================================================ */}
+      <section className="relative z-10 w-full max-w-4xl mx-auto px-4 pt-16 pb-20 sm:pt-20 sm:pb-24 flex flex-col items-center">
+        <h2 className="font-display text-3xl sm:text-4xl md:text-5xl tracking-wide uppercase text-slate-950 mb-3 leading-[0.95] text-center text-balance">
+          See it in action.
+        </h2>
+        <p className="text-slate-600 text-sm sm:text-base mb-8 sm:mb-10 max-w-md text-center text-pretty">
+          Copy anything — text, images, code, files. Clipplic keeps it all, instantly searchable.
+        </p>
 
-      {/* SECTION 3: BOTTOM CALLOUT CTA */}
-      <section className="relative z-10 w-full max-w-5xl mx-auto px-4 pb-28 flex flex-col items-center">
-        {/* Big Bottom Callout Section */}
-        <div className="w-full rounded-3xl bg-gradient-to-b from-white to-slate-100/70 dark:from-[#16181F] dark:to-[#111216] border border-slate-200/90 dark:border-white/10 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.06)] p-8 sm:p-14 text-center flex flex-col items-center">
-          <h2 className="font-display text-4xl sm:text-5xl md:text-6xl tracking-wide uppercase text-slate-950 dark:text-white mb-3 leading-[0.95] text-balance">
-            Useful things should be easy to keep.
-          </h2>
-          <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base mb-8 max-w-md text-pretty">
-            Clipplic is completely free and open source. Download the latest binary for macOS Sonoma and Sequoia.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center gap-3">
-            <SpecularButton
-              size="lg"
-              radius={18}
-              tint="#0071E3"
-              tintOpacity={1}
-              blur={12}
-              textColor="#ffffff"
-              lineColor="#ffffff"
-              baseColor="#0058b3"
-              intensity={1.2}
-              shineSize={12}
-              shineFade={40}
-              thickness={1.2}
-              speed={0.35}
-              followMouse={true}
-              proximity={250}
-              autoAnimate={false}
-              href="https://github.com/xzedm/clipplic/releases"
-              target="_blank"
-              className="shadow-[0_8px_24px_rgba(0,113,227,0.32)]"
-              aria-label="Download Clipplic for macOS"
-            >
-              <AppleIcon className="w-4 h-4 mr-2" />
-              <span>Download for macOS</span>
-            </SpecularButton>
-
-            <a
-              href="https://github.com/xzedm/clipplic"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Star Clipplic on GitHub"
-              className="inline-flex items-center gap-2 px-5 py-3.5 rounded-2xl text-sm font-medium text-slate-800 dark:text-slate-200 bg-white dark:bg-[#1C1E26] border border-slate-200/90 dark:border-white/10 shadow-xs hover:bg-slate-50 dark:hover:bg-[#232630] active:scale-[0.98] transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#0071E3]"
-            >
-              <GithubIcon className="w-4 h-4 text-slate-700 dark:text-slate-300" />
-              <span>Star on GitHub</span>
-            </a>
+        {/* macOS-style window frame */}
+        <div className="w-full max-w-3xl rounded-xl overflow-hidden bg-white border border-slate-200/90 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.12),0_0_0_1px_rgba(0,0,0,0.05)]">
+          {/* Window title bar */}
+          <div className="flex items-center gap-2 px-4 py-2.5 bg-[#F1F3F6] border-b border-slate-200/80">
+            <span className="w-3 h-3 rounded-full bg-[#FF5F57]" />
+            <span className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
+            <span className="w-3 h-3 rounded-full bg-[#28C840]" />
+            <span className="flex-1 text-center text-[11px] font-mono text-slate-400 select-none -ml-14">
+              Clipplic
+            </span>
           </div>
+          {/* GIF content */}
+          <div className="overflow-hidden bg-white">
+            <img
+              src="/clipplic-demo.gif?v=3"
+              alt="Clipplic clipboard manager demo showing copy history, search, and instant paste"
+              className="w-full block bg-white object-cover"
+              width={774}
+              height={448}
+              loading="lazy"
+            />
+          </div>
+        </div>
+
+        <p className="mt-5 text-[11px] font-mono text-slate-400 select-none">
+          ⌘⇧V to open — start typing to search — Enter to paste
+        </p>
+      </section>
+
+      {/* ============================================================ */}
+      {/* SECTION 3: BOTTOM CTA                                        */}
+      {/* ============================================================ */}
+      <section className="relative z-10 w-full max-w-3xl mx-auto px-4 pt-8 pb-24 sm:pt-12 sm:pb-28 flex flex-col items-center text-center">
+        <h2 className="font-display text-3xl sm:text-4xl md:text-5xl tracking-wide uppercase text-slate-950 mb-3 leading-[0.95] text-balance">
+          Useful things should be easy to keep.
+        </h2>
+        <p className="text-slate-600 text-sm sm:text-base mb-8 max-w-md text-pretty">
+          Clipplic is completely free and open source. Download the latest binary for macOS Sonoma and Sequoia.
+        </p>
+
+        <div className="flex flex-col sm:flex-row items-center gap-3">
+          <SpecularButton
+            size="lg"
+            radius={14}
+            tint="#0071E3"
+            tintOpacity={1}
+            blur={12}
+            textColor="#ffffff"
+            lineColor="#ffffff"
+            baseColor="#0058b3"
+            intensity={1.2}
+            shineSize={12}
+            shineFade={40}
+            thickness={1.2}
+            speed={0.35}
+            followMouse={true}
+            proximity={250}
+            autoAnimate={false}
+            href="https://github.com/xzedm/clipplic/releases"
+            target="_blank"
+            aria-label="Download Clipplic for macOS"
+          >
+            <AppleIcon className="w-4 h-4 mr-2" />
+            <span>Download for macOS</span>
+          </SpecularButton>
+
+          <a
+            href="https://github.com/xzedm/clipplic"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Star Clipplic on GitHub"
+            className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl text-sm font-medium text-slate-700 bg-white border border-slate-200/90 shadow-xs hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98] transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#0071E3]"
+          >
+            <GithubIcon className="w-4 h-4" />
+            <span>Star on GitHub</span>
+          </a>
         </div>
       </section>
 
       {/* ============================================================ */}
       {/* FOOTER                                                       */}
       {/* ============================================================ */}
-      <footer className="relative z-10 w-full border-t border-slate-200/70 dark:border-white/10 py-10 px-4">
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
-          <div className="flex items-center gap-2 font-display text-slate-800 dark:text-slate-200 text-lg tracking-wider">
+      <footer className="relative z-10 w-full border-t border-slate-200/80 py-10 px-4">
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+          <div className="flex items-center gap-2 font-display text-slate-800 text-lg tracking-wider">
             <img
               src="/app-icon.png"
               alt="Clipplic logo"
@@ -267,19 +283,19 @@ export function App() {
           </div>
 
           <div className="flex items-center gap-6 font-mono text-[11px]">
-            <a href="https://github.com/xzedm/clipplic" target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#0071E3] rounded px-1">
+            <a href="https://github.com/xzedm/clipplic" target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#0071E3] rounded px-1">
               Source Code
             </a>
-            <a href="https://github.com/xzedm/clipplic/releases" target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#0071E3] rounded px-1">
+            <a href="https://github.com/xzedm/clipplic/releases" target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#0071E3] rounded px-1">
               Release Notes
             </a>
-            <a href="https://github.com/xzedm/clipplic/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#0071E3] rounded px-1">
+            <a href="https://github.com/xzedm/clipplic/blob/main/LICENSE.md" target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#0071E3] rounded px-1">
               MIT License
             </a>
           </div>
 
           <span className="font-normal select-none">
-            Crafted for macOS by <a href="https://github.com/xzedm" target="_blank" rel="noopener noreferrer" className="font-medium text-slate-700 dark:text-slate-300 hover:underline">@xzedm</a>
+            Crafted for macOS by <a href="https://github.com/xzedm" target="_blank" rel="noopener noreferrer" className="font-medium text-slate-700 hover:underline">@xzedm</a>
           </span>
         </div>
       </footer>
