@@ -125,3 +125,219 @@
     transform: none !important;
   }
 }
+
+/* ============================================================ */
+/* Film grain — breaks the digital flatness of large light areas */
+/* ============================================================ */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0.07;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Sky wash that carries the hero's dusk light down the page */
+.sky-wash {
+  background:
+    radial-gradient(60% 45% at 85% 0%, rgba(242, 201, 179, 0.35), transparent 70%),
+    radial-gradient(50% 40% at 10% 30%, rgba(143, 196, 240, 0.22), transparent 70%);
+}
+
+/* ============================================================ */
+/* Scroll reveal                                                 */
+/* ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ============================================================ */
+/* Clip ribbon                                                   */
+/* ============================================================ */
+.ribbon {
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+.ribbon-tilt {
+  transform: rotate(-3deg) scale(1.06);
+}
+.ribbon-track {
+  animation: ribbon-scroll 70s linear infinite;
+}
+.ribbon-track--reverse {
+  animation-direction: reverse;
+  animation-duration: 85s;
+}
+.ribbon:hover .ribbon-track {
+  animation-play-state: paused;
+}
+@keyframes ribbon-scroll {
+  to {
+    transform: translateX(calc(-50% - 6px));
+  }
+}
+.clip-card {
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow:
+    0 0 0 1px rgba(30, 58, 110, 0.07),
+    0 1px 2px rgba(30, 58, 110, 0.06),
+    0 12px 28px -14px rgba(30, 58, 110, 0.28);
+}
+
+/* ============================================================ */
+/* Keycaps                                                       */
+/* ============================================================ */
+.key-deck {
+  display: flex;
+  gap: clamp(10px, 2vw, 18px);
+  padding: clamp(14px, 2.4vw, 22px);
+  border-radius: 30px;
+  background: linear-gradient(180deg, #e4e8ee, #d4dae3);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -2px 6px rgba(30, 58, 110, 0.12),
+    0 30px 60px -30px rgba(30, 58, 110, 0.45);
+}
+.keycap {
+  --lift: 7px;
+  position: relative;
+  width: clamp(72px, 13vw, 118px);
+  height: clamp(72px, 13vw, 118px);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(10px, 1.6vw, 16px);
+  color: #0f172a;
+  background: linear-gradient(180deg, #ffffff 0%, #f1f4f8 100%);
+  box-shadow:
+    inset 0 1px 0 #fff,
+    inset 0 -3px 0 rgba(30, 58, 110, 0.06),
+    0 var(--lift) 0 #c3cad6,
+    0 calc(var(--lift) + 6px) 18px -6px rgba(30, 58, 110, 0.35);
+  transform: translateY(calc(var(--lift) * -1));
+  transition: transform 110ms cubic-bezier(0.3, 0.7, 0.4, 1), box-shadow 110ms cubic-bezier(0.3, 0.7, 0.4, 1), color 110ms;
+}
+.keycap--wide {
+  width: clamp(92px, 17vw, 150px);
+}
+.keycap.is-pressed {
+  transform: translateY(-1px);
+  color: #0071e3;
+  box-shadow:
+    inset 0 1px 0 #fff,
+    inset 0 -1px 0 rgba(30, 58, 110, 0.06),
+    0 1px 0 #c3cad6,
+    0 2px 6px -2px rgba(30, 58, 110, 0.3);
+}
+.keycap-glyph {
+  font-size: clamp(26px, 4.6vw, 44px);
+  line-height: 1;
+}
+.keycap-label {
+  font-family: var(--font-sans);
+  font-size: clamp(9px, 1.2vw, 12px);
+  color: #64748b;
+  align-self: flex-end;
+}
+
+/* ============================================================ */
+/* Receipt                                                       */
+/* ============================================================ */
+.receipt-wrap {
+  width: min(100%, 340px);
+  transform: rotate(2.5deg);
+  filter: drop-shadow(0 2px 2px rgba(30, 58, 110, 0.08)) drop-shadow(0 24px 30px rgba(30, 58, 110, 0.22));
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.receipt-wrap:hover {
+  transform: rotate(0.5deg) translateY(-4px);
+}
+.receipt {
+  background: linear-gradient(180deg, #fffdf8, #fbf7ee);
+  /* Scalloped tear-off edges top and bottom */
+  --r: 6px;
+  --s: 16px;
+  -webkit-mask:
+    radial-gradient(circle var(--r) at 50% 0, #0000 97%, #000) 50% 0 / var(--s) 51% repeat-x,
+    radial-gradient(circle var(--r) at 50% 100%, #0000 97%, #000) 50% 100% / var(--s) 51% repeat-x;
+  mask:
+    radial-gradient(circle var(--r) at 50% 0, #0000 97%, #000) 50% 0 / var(--s) 51% repeat-x,
+    radial-gradient(circle var(--r) at 50% 100%, #0000 97%, #000) 50% 100% / var(--s) 51% repeat-x;
+}
+.receipt-rule {
+  border-top: 1px dashed rgba(15, 23, 42, 0.3);
+}
+.receipt-leader {
+  border-bottom: 1px dotted rgba(15, 23, 42, 0.35);
+  transform: translateY(-3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .ribbon-track {
+    animation: none;
+  }
+  .keycap {
+    transition: none;
+  }
+}
+
+/* ============================================================ */
+/* Hero "try it" keycaps                                         */
+/* ============================================================ */
+.minikey {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 6px;
+  border-radius: 7px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: #0f172a;
+  background: linear-gradient(180deg, #ffffff 0%, #eef1f5 100%);
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 2.5px 0 #c3cad6,
+    0 4px 10px -3px rgba(30, 58, 110, 0.35);
+  transform: translateY(-2px);
+  transition: transform 110ms cubic-bezier(0.3, 0.7, 0.4, 1), box-shadow 110ms cubic-bezier(0.3, 0.7, 0.4, 1), color 110ms;
+}
+/* Hover presses the keys one after another, like typing the shortcut */
+.hud-try:hover .minikey,
+.minikey.is-pressed {
+  transform: translateY(0);
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 0.5px 0 #c3cad6,
+    0 1px 3px -1px rgba(30, 58, 110, 0.3);
+}
+.hud-try:hover .minikey:nth-child(2) { transition-delay: 60ms; }
+.hud-try:hover .minikey:nth-child(3) { transition-delay: 120ms; }
+.minikey.is-pressed {
+  color: #0071e3;
+  transition-delay: 0ms;
+}
+.hud-try:active .minikey {
+  transform: translateY(0.5px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .minikey {
+    transition: none;
+  }
+}
