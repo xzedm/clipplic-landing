@@ -15,6 +15,7 @@ import {
   ExternalLink,
   Check
 } from 'lucide-react';
+import { AppIcon, type SourceApp } from './AppIcons';
 
 export type ItemContentType = 'text' | 'url' | 'code' | 'image' | 'file';
 
@@ -24,7 +25,7 @@ export interface HUDItem {
   previewTitle: string;
   secondaryPreview?: string;
   sourceAppName: string;
-  sourceAppIcon: 'safari' | 'xcode' | 'figma' | 'terminal' | 'finder' | 'cleanshot';
+  sourceAppIcon: SourceApp;
   createdAt: string;
   isPinned: boolean;
   textContent?: string;
@@ -138,68 +139,9 @@ export const KeycapBadge: React.FC<{ text: string; isAccent?: boolean }> = ({ te
 );
 
 // Native macOS App Icons
-export const NativeAppIcon: React.FC<{ icon: string; size?: number }> = ({ icon, size = 16 }) => {
-  switch (icon) {
-    case 'safari':
-      return (
-        <div
-          className="rounded-full bg-linear-to-br from-sky-400 to-blue-600 flex items-center justify-center shadow-xs border border-white/40"
-          style={{ width: size, height: size }}
-        >
-          <div className="w-1.5 h-1.5 rounded-full bg-white relative">
-            <span className="absolute -top-1 left-0.5 w-0.5 h-1 bg-red-500 rounded-full" />
-            <span className="absolute -bottom-1 left-0.5 w-0.5 h-1 bg-blue-100 rounded-full" />
-          </div>
-        </div>
-      );
-    case 'xcode':
-      return (
-        <div
-          className="rounded-md bg-linear-to-b from-blue-500 to-indigo-600 flex items-center justify-center shadow-xs border border-white/30 text-white font-mono text-[9px] font-black"
-          style={{ width: size, height: size }}
-        >
-          🔨
-        </div>
-      );
-    case 'figma':
-      return (
-        <div
-          className="rounded-md bg-slate-900 flex items-center justify-center shadow-xs border border-white/30 text-[9px]"
-          style={{ width: size, height: size }}
-        >
-          🎨
-        </div>
-      );
-    case 'terminal':
-      return (
-        <div
-          className="rounded-md bg-slate-900 flex items-center justify-center shadow-xs border border-slate-700 text-emerald-400 font-mono text-[9px] font-bold"
-          style={{ width: size, height: size }}
-        >
-          &gt;_
-        </div>
-      );
-    case 'finder':
-      return (
-        <div
-          className="rounded-md bg-linear-to-b from-sky-400 to-blue-500 flex items-center justify-center shadow-xs border border-white/40 text-[10px]"
-          style={{ width: size, height: size }}
-        >
-          🙂
-        </div>
-      );
-    case 'cleanshot':
-    default:
-      return (
-        <div
-          className="rounded-md bg-linear-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-xs border border-white/30 text-white text-[9px]"
-          style={{ width: size, height: size }}
-        >
-          📸
-        </div>
-      );
-  }
-};
+export const NativeAppIcon: React.FC<{ icon: SourceApp; size?: number }> = ({ icon, size = 16 }) => (
+  <AppIcon app={icon} size={size} />
+);
 
 export interface FloatingHUDViewProps {
   isEmbedded?: boolean;
@@ -599,7 +541,7 @@ export const FloatingHUDView: React.FC<FloatingHUDViewProps> = ({
                       {item.previewTitle}
                     </p>
                     <div className="flex items-center gap-1.5 text-[10px] text-slate-500 mt-0.5">
-                      <NativeAppIcon icon={item.sourceAppIcon} size={12} />
+                      <NativeAppIcon icon={item.sourceAppIcon} size={14} />
                       <span className="truncate">{item.sourceAppName}</span>
                       {item.secondaryPreview && (
                         <>

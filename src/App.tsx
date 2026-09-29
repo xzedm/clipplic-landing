@@ -3,6 +3,10 @@ import { AppleIcon, GithubIcon } from './components/icons';
 import { FloatingHistoryHud } from './components/FloatingHistoryHud';
 import { SpecularButton } from './components/SpecularButton';
 import { HudLiveCard } from './components/HudLiveCard';
+import { ClipRibbon } from './components/ClipRibbon';
+import { KeycapSection } from './components/KeycapSection';
+import { Receipt } from './components/ReceiptSection';
+import { Reveal } from './components/Reveal';
 
 export function App() {
   const [isHudOpen, setIsHudOpen] = useState(false);
@@ -153,10 +157,6 @@ export function App() {
               <span>Download for macOS</span>
             </SpecularButton>
 
-            <span className="text-xs text-slate-800 font-medium mt-2.5 select-none">
-              Free forever • Open Source • 100% On-Device
-            </span>
-
             {/* Spotlight HUD Live Trigger */}
             <div className="mt-4 w-full flex justify-center">
               <HudLiveCard
@@ -167,104 +167,149 @@ export function App() {
           </div>
         </div>
 
-        {/* Sleek frosted scroll cue */}
-        <div className="relative z-10 pt-1 select-none animate-fade-in">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/30 backdrop-blur-md text-white/95 border border-white/25 text-[11px] font-mono shadow-xs">
-            <span>↓</span>
-            <span>Scroll to explore</span>
-          </span>
+        {/* Hero footline — quiet facts pinned to the horizon */}
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-2 sm:px-4 flex items-end justify-between gap-4 text-[11px] font-mono text-slate-700 select-none animate-fade-in animation-delay-500">
+          <span>For macOS Sonoma &amp; Sequoia</span>
+          <span className="hidden sm:inline">Free · MIT · Runs on-device</span>
         </div>
       </section>
 
-      {/* ============================================================ */}
-      {/* SECTION 2: PRODUCT DEMO (GIF)                                */}
-      {/* ============================================================ */}
-      <section className="relative z-10 w-full max-w-4xl mx-auto px-4 pt-16 pb-20 sm:pt-20 sm:pb-24 flex flex-col items-center">
-        <h2 className="font-display text-3xl sm:text-4xl md:text-5xl tracking-wide uppercase text-slate-950 mb-3 leading-[0.95] text-center text-balance">
-          See it in action.
-        </h2>
-        <p className="text-slate-600 text-sm sm:text-base mb-8 sm:mb-10 max-w-md text-center text-pretty">
-          Copy anything — text, images, code, files. Clipplic keeps it all, instantly searchable.
-        </p>
+      <main id="main" className="relative sky-wash">
+        {/* ============================================================ */}
+        {/* SECTION 2: CLIP RIBBON                                       */}
+        {/* ============================================================ */}
+        <section className="relative pt-20 sm:pt-28 pb-10 overflow-hidden" aria-labelledby="ribbon-title">
+          <Reveal className="w-full max-w-5xl mx-auto px-4 sm:px-8 grid md:grid-cols-12 gap-6 items-end mb-10 sm:mb-14">
+            <h2
+              id="ribbon-title"
+              className="md:col-span-7 font-display text-4xl sm:text-5xl md:text-6xl uppercase tracking-wide leading-[0.92] text-slate-950 text-balance"
+            >
+              Everything you copied today. Still here.
+            </h2>
+            <p className="md:col-span-4 md:col-start-9 text-[15px] text-slate-600 leading-relaxed text-pretty">
+              Links from Safari, colors from Figma, a command you ran once in Terminal. Clipplic quietly keeps each one, with the app it came from.
+            </p>
+          </Reveal>
+          <ClipRibbon />
+        </section>
 
-        {/* macOS-style window frame */}
-        <div className="w-full max-w-3xl rounded-xl overflow-hidden bg-white border border-slate-200/90 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.12),0_0_0_1px_rgba(0,0,0,0.05)]">
-          {/* Window title bar */}
-          <div className="flex items-center gap-2 px-4 py-2.5 bg-[#F1F3F6] border-b border-slate-200/80">
-            <span className="w-3 h-3 rounded-full bg-[#FF5F57]" />
-            <span className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
-            <span className="w-3 h-3 rounded-full bg-[#28C840]" />
-            <span className="flex-1 text-center text-[11px] font-mono text-slate-400 select-none -ml-14">
-              Clipplic
-            </span>
+        {/* ============================================================ */}
+        {/* SECTION 3: PRODUCT DEMO                                      */}
+        {/* ============================================================ */}
+        <section className="relative w-full max-w-6xl mx-auto px-4 sm:px-8 pt-20 sm:pt-28 pb-12" aria-labelledby="demo-title">
+          <div className="grid md:grid-cols-12 gap-10 md:gap-8 items-center">
+            <Reveal className="md:col-span-4">
+              <h2
+                id="demo-title"
+                className="font-display text-4xl sm:text-5xl uppercase tracking-wide leading-[0.92] text-slate-950 text-balance"
+              >
+                Watch it work.
+              </h2>
+              <p className="mt-4 text-[15px] text-slate-600 leading-relaxed max-w-[36ch] text-pretty">
+                Text, images, code, files. Open the panel, type a few letters, and the right clip is already selected.
+              </p>
+            </Reveal>
+
+            <Reveal className="md:col-span-8" delay={120}>
+              {/* macOS-style window frame */}
+              <figure className="rounded-2xl overflow-hidden bg-white shadow-[0_0_0_1px_rgba(30,58,110,0.08),0_2px_4px_rgba(30,58,110,0.05),0_40px_80px_-30px_rgba(30,58,110,0.4)]">
+                <div className="flex items-center gap-2 px-4 py-2.5 bg-[#F1F3F6] border-b border-slate-200/80">
+                  <span className="w-3 h-3 rounded-full bg-[#FF5F57]" />
+                  <span className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
+                  <span className="w-3 h-3 rounded-full bg-[#28C840]" />
+                  <span className="flex-1 text-center text-[11px] text-slate-500 select-none -ml-14">Clipplic</span>
+                </div>
+                <img
+                  src="/clipplic-demo.gif?v=3"
+                  alt="Clipplic clipboard manager demo showing copy history, search, and instant paste"
+                  className="w-full block bg-white object-cover"
+                  width={774}
+                  height={448}
+                  loading="lazy"
+                />
+              </figure>
+            </Reveal>
           </div>
-          {/* GIF content */}
-          <div className="overflow-hidden bg-white">
-            <img
-              src="/clipplic-demo.gif?v=3"
-              alt="Clipplic clipboard manager demo showing copy history, search, and instant paste"
-              className="w-full block bg-white object-cover"
-              width={774}
-              height={448}
-              loading="lazy"
-            />
+        </section>
+
+        {/* ============================================================ */}
+        {/* SECTION 4: THE SHORTCUT                                      */}
+        {/* ============================================================ */}
+        <section className="relative w-full max-w-6xl mx-auto px-4 sm:px-8 pt-24 sm:pt-32 pb-12" aria-labelledby="keys-title">
+          <Reveal>
+            <h2
+              id="keys-title"
+              className="font-display text-4xl sm:text-5xl md:text-6xl uppercase tracking-wide leading-[0.92] text-slate-950 mb-12 sm:mb-16 max-w-[14ch]"
+            >
+              Three keys. No hunting.
+            </h2>
+          </Reveal>
+          <Reveal delay={120}>
+            <KeycapSection onTry={() => setIsHudOpen(true)} />
+          </Reveal>
+        </section>
+
+        {/* ============================================================ */}
+        {/* SECTION 5: THE BILL + DOWNLOAD                               */}
+        {/* ============================================================ */}
+        <section className="relative w-full max-w-6xl mx-auto px-4 sm:px-8 pt-24 sm:pt-32 pb-28 sm:pb-36" aria-labelledby="cta-title">
+          <div className="grid md:grid-cols-12 gap-14 md:gap-8 items-center">
+            <Reveal className="md:col-span-6 lg:col-span-7">
+              <h2
+                id="cta-title"
+                className="font-display text-4xl sm:text-5xl md:text-6xl uppercase tracking-wide leading-[0.92] text-slate-950 text-balance"
+              >
+                Useful things should be easy to keep.
+              </h2>
+              <p className="mt-5 text-[15px] text-slate-600 leading-relaxed max-w-[42ch] text-pretty">
+                Clipplic is free and open source, with no subscription to cancel later. Your history lives on your Mac and nowhere else.
+              </p>
+
+              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+                <SpecularButton
+                  size="lg"
+                  radius={16}
+                  tint="#0071E3"
+                  tintOpacity={1}
+                  blur={12}
+                  textColor="#ffffff"
+                  lineColor="#ffffff"
+                  baseColor="#0058b3"
+                  intensity={1.2}
+                  shineSize={12}
+                  shineFade={40}
+                  thickness={1.2}
+                  speed={0.35}
+                  followMouse={true}
+                  proximity={250}
+                  autoAnimate={false}
+                  href="https://github.com/xzedm/clipplic/releases"
+                  target="_blank"
+                  className="shadow-[0_10px_28px_-8px_rgba(0,113,227,0.55)]"
+                  aria-label="Download Clipplic for macOS"
+                >
+                  <AppleIcon className="w-4 h-4 mr-2" />
+                  <span>Download for macOS</span>
+                </SpecularButton>
+
+                <a
+                  href="https://github.com/xzedm/clipplic"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-slate-950 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#0071E3] rounded"
+                >
+                  <GithubIcon className="w-4 h-4" />
+                  <span className="underline decoration-slate-300 group-hover:decoration-slate-600 underline-offset-4">Read the source</span>
+                </a>
+              </div>
+            </Reveal>
+
+            <Reveal className="md:col-span-6 lg:col-span-5 flex justify-center md:justify-end" delay={150}>
+              <Receipt />
+            </Reveal>
           </div>
-        </div>
-
-        <p className="mt-5 text-[11px] font-mono text-slate-400 select-none">
-          ⌘⇧V to open — start typing to search — Enter to paste
-        </p>
-      </section>
-
-      {/* ============================================================ */}
-      {/* SECTION 3: BOTTOM CTA                                        */}
-      {/* ============================================================ */}
-      <section className="relative z-10 w-full max-w-3xl mx-auto px-4 pt-8 pb-24 sm:pt-12 sm:pb-28 flex flex-col items-center text-center">
-        <h2 className="font-display text-3xl sm:text-4xl md:text-5xl tracking-wide uppercase text-slate-950 mb-3 leading-[0.95] text-balance">
-          Useful things should be easy to keep.
-        </h2>
-        <p className="text-slate-600 text-sm sm:text-base mb-8 max-w-md text-pretty">
-          Clipplic is completely free and open source. Download the latest binary for macOS Sonoma and Sequoia.
-        </p>
-
-        <div className="flex flex-col sm:flex-row items-center gap-3">
-          <SpecularButton
-            size="lg"
-            radius={14}
-            tint="#0071E3"
-            tintOpacity={1}
-            blur={12}
-            textColor="#ffffff"
-            lineColor="#ffffff"
-            baseColor="#0058b3"
-            intensity={1.2}
-            shineSize={12}
-            shineFade={40}
-            thickness={1.2}
-            speed={0.35}
-            followMouse={true}
-            proximity={250}
-            autoAnimate={false}
-            href="https://github.com/xzedm/clipplic/releases"
-            target="_blank"
-            aria-label="Download Clipplic for macOS"
-          >
-            <AppleIcon className="w-4 h-4 mr-2" />
-            <span>Download for macOS</span>
-          </SpecularButton>
-
-          <a
-            href="https://github.com/xzedm/clipplic"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Star Clipplic on GitHub"
-            className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl text-sm font-medium text-slate-700 bg-white border border-slate-200/90 shadow-xs hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98] transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#0071E3]"
-          >
-            <GithubIcon className="w-4 h-4" />
-            <span>Star on GitHub</span>
-          </a>
-        </div>
-      </section>
+        </section>
+      </main>
 
       {/* ============================================================ */}
       {/* FOOTER                                                       */}
@@ -299,6 +344,8 @@ export function App() {
           </span>
         </div>
       </footer>
+
+      <div className="grain" aria-hidden="true" />
 
       {/* FLOATING HUD SEARCH PALETTE (SUMMONED ON ⌘⇧V OR CLICK) */}
       <FloatingHistoryHud
